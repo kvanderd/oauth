@@ -1,29 +1,34 @@
+enable :sessions
+
 get '/' do
   # Look in app/views/index.erb
   erb :index
 end
 
 
-post "/create_user" do
-  #create a new user object save to db
-  #create user cookie session
-  #redirct to private logged in url
-  erb :user_view
+post "/login" do
+  session[:valid] = User.authenticate(params[:email], params[:password])
+  if session[:valid]
+    erb :secret 
+  else
+    erb :wrong
+  end
 end
 
-post "/login" do
-  #authiticate user login if success
-  #create user cookie session and redirect to prive loffed in url "user_view"
-  #else redirect to index
+get '/secret' do 
+  if session[:valid]
+    erb :secret
+  else
+    erb :index
   end
+end
 
 post "/logout" do
-  #clear cookie session
-  #redirect to index
+  session.clear
+  redirect('/')
 end
 
-get "/secret" do 
-  #if active session? (#this is a conidtional - session cookie error)
-  #else redirect to index
-  erb: user_view
+get "/new" do 
+   User.create(params)
+  erb :index
 end
