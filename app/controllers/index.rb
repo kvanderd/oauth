@@ -11,7 +11,7 @@ post "/login" do
   if session[:valid]
     erb :secret 
   else
-    erb :wrong
+    erb :bad
   end
 end
 
